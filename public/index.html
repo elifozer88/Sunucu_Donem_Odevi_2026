@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Ticaret Stok Yönetim Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .product-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .product-stock {
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .stock-ok {
+            background: #4caf50;
+            color: white;
+        }
+
+        .stock-low {
+            background: #ff9800;
+            color: white;
+        }
+
+        .stock-out {
+            background: #f44336;
+            color: white;
+        }
+
+        .orders-list {
+            margin-top: 20px;
+        }
+
+        .order-card {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-pending { background: #ffc107; color: #333; }
+        .status-confirmed { background: #2196f3; color: white; }
+        .status-shipped { background: #9c27b0; color: white; }
+        .status-delivered { background: #4caf50; color: white; }
+        .status-cancelled { background: #f44336; color: white; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #c62828;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .order-items {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f5f7fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .cart-total {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛒 E-Ticaret Stok Yönetim</h1>
+            <p class="subtitle">Ürün ve Sipariş Yönetim Sistemi</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('products')">📦 Ürünler</button>
+            <button class="tab-btn" onclick="showTab('orders')">📋 Siparişler</button>
+            <button class="tab-btn" onclick="showTab('new-order')">➕ Yeni Sipariş</button>
+            <button class="tab-btn" onclick="showTab('new-product')">🆕 Yeni Ürün</button>
+        </div>
+
+        <div class="content">
+            <!-- Ürünler Tab -->
+            <div id="products-tab" class="tab-content active">
+                <h2>Ürün Listesi</h2>
+                <div id="products-container" class="loading">Yükleniyor...</div>
+            </div>
+
+            <!-- Siparişler Tab -->
+            <div id="orders-tab" class="tab-content">
+                <h2>Sipariş Listesi</h2>
+                <div id="orders-container" class="loading">Yükleniyor...</div>
+            </div>
+
+            <!-- Yeni Sipariş Tab -->
+            <div id="new-order-tab" class="tab-content">
+                <h2>Yeni Sipariş Oluştur</h2>
+                <div id="order-message"></div>
+                <form id="order-form">
+                    <div class="form-group">
+                        <label>Müşteri Adı:</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta:</label>
+                        <input type="email" id="customer-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ürün Seç:</label>
+                        <select id="product-select">
+                            <option value="">Ürün seçin...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Miktar:</label>
+                        <input type="number" id="quantity" min="1" value="1">
+                    </div>
+                    <button type="button" onclick="addToCart()">Sepete Ekle</button>
+                    
+                    <div id="cart" style="margin-top: 30px;"></div>
+                    
+                    <button type="submit" style="width: 100%; margin-top: 20px;">Siparişi Tamamla</button>
+                </form>
+            </div>
+
+            <!-- Yeni Ürün Tab -->
+            <div id="new-product-tab" class="tab-content">
+                <h2>Yeni Ürün Ekle</h2>
+                <div id="product-message"></div>
+                <form id="product-form">
+                    <div class="form-group">
+                        <label>Ürün Adı:</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Açıklama:</label>
+                        <textarea id="product-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Fiyat (TL):</label>
+                        <input type="number" id="product-price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stok:</label>
+                        <input type="number" id="product-stock" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Minimum Stok:</label>
+                        <input type="number" id="product-min-stock" value="5">
+                    </div>
+                    <button type="submit">Ürün Ekle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
