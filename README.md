@@ -17,6 +17,11 @@ E-ticaret platformu için stok yönetimi ve sipariş işlemleri:
 - Müşteriler sipariş oluşturabilir
 - Sistem otomatik stok kontrolü yapar
 - Minimum sipariş tutarı kontrolü yapılır
+<img width="2840" height="1587" alt="image" src="https://github.com/user-attachments/assets/3df6deaa-c5d2-423c-acc0-7920ed9d3a23" />
+<img width="2828" height="1574" alt="image" src="https://github.com/user-attachments/assets/a9afc32e-8d79-4057-8147-7bc8e1454e8a" />
+<img width="2834" height="1584" alt="image" src="https://github.com/user-attachments/assets/ace738ea-565a-45bf-9726-4306180052e0" />
+
+
 
 ## 🔒 İş Kuralları
 
